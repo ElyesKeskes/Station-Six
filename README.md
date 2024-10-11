@@ -8,6 +8,6 @@ First-person horror game with puzzles and objectives. Main antagonist is a blind
 
 ## Brain Map
 
-[](https://mm.tt/app/map/3467205813?t=91yGgdAET2)
+https://mm.tt/app/map/3467205813?t=91yGgdAET2
 
 
