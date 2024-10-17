@@ -1,0 +1,5 @@
+Content/Assets/InUse/**/*.uasset filer=lfs diff=lfs merge=lfs -text
+Content/Assets/InUse/**/*.umap filer=lfs diff=lfs merge=lfs -text
+
+Content/Work_Hassene/**/*.uasset filer=lfs diff=lfs merge=lfs -text
+Content/Work_Hassene/**/*.umap filer=lfs diff=lfs merge=lfs -text
