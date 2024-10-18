@@ -79,7 +79,7 @@ public:
     UFUNCTION(BlueprintPure, Category = "Grid")
     static bool CanPlaceRoom(const TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize);
     UFUNCTION(BlueprintCallable, Category = "Grid")
-    static TArray<bool> MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize);
+    static TArray<bool> MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize);
 };
 
 

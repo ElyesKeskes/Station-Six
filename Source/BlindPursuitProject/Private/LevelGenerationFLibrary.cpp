@@ -68,43 +68,6 @@ FVector ULevelGenerationFLibrary::GetSocketCoordinatesInRoom(FVector RelativeLoc
 		CoordinatesInRoom.Y = 1;
 	}
 	
-	/* 
-    switch (Orientation)
-    {
-       
-        	
-    ESocketOrientation::North:
-            // For a socket facing north, the Y coordinate should be increased towards the north edge
-            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 1, RoomFootprint.X);
-           CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 1, RoomFootprint.Y); // Adjust for northward placement
-            break;
-
-        case ESocketOrientation::South:
-            // For a socket facing south, the Y coordinate should be decreased towards the south edge
-            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 1, RoomFootprint.X );
-            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y - 1), 1, RoomFootprint.Y ); // Adjust for southward placement
-            break;
-
-        case ESocketOrientation::East:
-            // For a socket facing east, the X coordinate should be increased towards the east edge
-            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 1, RoomFootprint.X ); // Adjust for eastward placement
-            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 1, RoomFootprint.Y);
-            break;
-
-        case ESocketOrientation::West:
-            // For a socket facing west, the X coordinate should be decreased towards the west edge
-            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X - 1), 1, RoomFootprint.X ); // Adjust for westward placement
-            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 1, RoomFootprint.Y );
-            break;
-
-        default:
-            // Default case to handle errors or fallback scenarios
-            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 0, RoomFootprint.X );
-            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 0, RoomFootprint.Y );
-            break;
-    }
-	*/
-    // For Z-axis, it's generally simpler because we're assuming a height of 1 cell in many cases
     CoordinatesInRoom.Z = 1;
 
     return CoordinatesInRoom;
@@ -236,11 +199,11 @@ bool ULevelGenerationFLibrary::CanPlaceRoom(const TArray<bool>& Grid, FVector Ro
 	return true;  // No overlap
 }
 
-TArray<bool> ULevelGenerationFLibrary::MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize)
+TArray<bool> ULevelGenerationFLibrary::MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize)
 {
-	for (int32 X = StartPosition.X; X < StartPosition.X + RoomFootprint.X; X++)
+	for (int32 X = StartPosition.X-1; X < StartPosition.X + RoomFootprint.X-1; X++)
 	{
-		for (int32 Y = StartPosition.Y; Y < StartPosition.Y + RoomFootprint.Y; Y++)
+		for (int32 Y = StartPosition.Y-1; Y < StartPosition.Y + RoomFootprint.Y-1; Y++)
 		{
 			for (int32 Z = StartPosition.Z; Z < StartPosition.Z + RoomFootprint.Z; Z++)
 			{
