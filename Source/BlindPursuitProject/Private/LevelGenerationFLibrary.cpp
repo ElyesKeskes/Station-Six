@@ -1,4 +1,115 @@
 #include "BlindPursuitProject/Public/LevelGenerationFLibrary.h"
+#include <cmath>
+
+#include "DrawDebugHelpers.h" // Include this to use the debug draw functions
+
+void ULevelGenerationFLibrary::DrawDebugGrid(UObject* WorldContextObject, TArray<bool> Grid, int32 XSize, int32 YSize, int32 ZSize, float CellLength, FVector GridTopLeftCellCenterLocation)
+{
+	for (int32 Z = 0; Z < ZSize; Z++) // Adjusted the loop to start from 0 for proper indexing
+	{
+		for (int32 Y = 0; Y < YSize; Y++) // Adjusted the loop to start from 0 for proper indexing
+		{
+			for (int32 X = 0; X < XSize; X++) // Adjusted the loop to start from 0 for proper indexing
+			{
+				int32 Index = X + (Y * XSize) + (Z * XSize * YSize);
+
+				if (Grid.IsValidIndex(Index)) // Only draw occupied cells
+				{
+					// Calculate the center position of the current cell using GridTopLeftCellCenterLocation
+					FVector CellCenter = GridTopLeftCellCenterLocation + FVector(X * CellLength + CellLength / 2.0f, Y * CellLength + CellLength / 2.0f, Z * CellLength + CellLength / 2.0f);
+                    
+					// Draw a box for the occupied cell
+					if (!Grid[Index])
+					{
+						DrawDebugBox(WorldContextObject->GetWorld(), CellCenter, FVector(CellLength / 2.0f), FColor::Red, false, -1.0f, 0, 1.0f);
+					}
+					else
+					{
+						DrawDebugBox(WorldContextObject->GetWorld(), CellCenter, FVector(CellLength / 2.0f), FColor::Green, false, -1.0f, 0, 2.0f);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+FVector ULevelGenerationFLibrary::GetSocketCoordinatesInRoom(FVector RelativeLocation, FVector RoomFootprint, float GridCellLength, ESocketOrientation Orientation)
+{
+    // Ensure that the relative location is properly scaled based on the grid cell size
+
+	float scaledLocationX = RelativeLocation.X / GridCellLength;
+	float scaledLocationY = RelativeLocation.Y / GridCellLength;
+
+    // Adjust the room's footprint bounds to center the calculations
+    float HalfFootprintX = RoomFootprint.X / 2.0f;
+	float HalfFootprintY = RoomFootprint.Y / 2.0f;
+
+    // Calculate the coordinates within the room's grid footprint
+    FVector CoordinatesInRoom;
+
+	CoordinatesInRoom.X = std::ceil(scaledLocationX + HalfFootprintX);
+	CoordinatesInRoom.Y = std::ceil(scaledLocationY + HalfFootprintY);
+	//DEBUG LOG
+	//ORIENTATION
+	UE_LOG(LogTemp, Warning, TEXT("Orientation: %d"), (int)Orientation);
+	UE_LOG(LogTemp, Warning, TEXT("HalfFootprintX: %f"), HalfFootprintX);
+	UE_LOG(LogTemp, Warning, TEXT("HalfFootprintX: %f"), HalfFootprintX);
+	//LOG SCALED LOCATION
+	UE_LOG(LogTemp, Warning, TEXT("scaledLocationX: %f"), scaledLocationX);
+	UE_LOG(LogTemp, Warning, TEXT("scaledLocationY: %f"), scaledLocationY);
+	if(CoordinatesInRoom.X == 0)
+	{
+		CoordinatesInRoom.X = 1;
+	}
+	if(CoordinatesInRoom.Y == 0)
+	{
+		CoordinatesInRoom.Y = 1;
+	}
+	
+	/* 
+    switch (Orientation)
+    {
+       
+        	
+    ESocketOrientation::North:
+            // For a socket facing north, the Y coordinate should be increased towards the north edge
+            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 1, RoomFootprint.X);
+           CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 1, RoomFootprint.Y); // Adjust for northward placement
+            break;
+
+        case ESocketOrientation::South:
+            // For a socket facing south, the Y coordinate should be decreased towards the south edge
+            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 1, RoomFootprint.X );
+            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y - 1), 1, RoomFootprint.Y ); // Adjust for southward placement
+            break;
+
+        case ESocketOrientation::East:
+            // For a socket facing east, the X coordinate should be increased towards the east edge
+            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 1, RoomFootprint.X ); // Adjust for eastward placement
+            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 1, RoomFootprint.Y);
+            break;
+
+        case ESocketOrientation::West:
+            // For a socket facing west, the X coordinate should be decreased towards the west edge
+            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X - 1), 1, RoomFootprint.X ); // Adjust for westward placement
+            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 1, RoomFootprint.Y );
+            break;
+
+        default:
+            // Default case to handle errors or fallback scenarios
+            CoordinatesInRoom.X = FMath::Clamp(FMath::RoundToInt(ScaledLocation.X + HalfFootprint.X), 0, RoomFootprint.X );
+            CoordinatesInRoom.Y = FMath::Clamp(FMath::RoundToInt(ScaledLocation.Y + HalfFootprint.Y), 0, RoomFootprint.Y );
+            break;
+    }
+	*/
+    // For Z-axis, it's generally simpler because we're assuming a height of 1 cell in many cases
+    CoordinatesInRoom.Z = 1;
+
+    return CoordinatesInRoom;
+}
+
 
 void ULevelGenerationFLibrary::RotateClockwiseBy90(AActor* RoomActor, TArray<FRoomSocketData>& SocketsData)
 {
@@ -73,41 +184,7 @@ void ULevelGenerationFLibrary::RotateToAlignWithSocket(AActor* RoomActor, TArray
 		}
 	}
 }
-TArray<TSubclassOf<APackedLevelActor>> ULevelGenerationFLibrary::LoadRoomLibrary(const FString& Path)
-{
-    // Ensure the path is valid (starts with "/Game/")
-    if (!Path.StartsWith("/Game"))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("Invalid path: %s. Path must start with /Game/"), *Path);
-        return {};
-    }
 
-    // Create an object library that will hold our room assets
-    UObjectLibrary* ObjectLibrary = UObjectLibrary::CreateLibrary(APackedLevelActor::StaticClass(), false, GIsEditor);
-
-    // Load assets from the relative content browser path
-    ObjectLibrary->LoadAssetDataFromPath(Path);
-
-    // Array to hold the asset data
-    TArray<FAssetData> AssetDatas;
-    ObjectLibrary->GetAssetDataList(AssetDatas);
-
-    // Array to store the filtered room classes
-    TArray<TSubclassOf<APackedLevelActor>> RoomLibrary;
-
-    // Iterate through the loaded assets and filter by APackedLevelActor class
-    for (const FAssetData& AssetData : AssetDatas)
-    {
-        UClass* AssetClass = AssetData.GetClass();
-        if (AssetClass && AssetClass->IsChildOf(APackedLevelActor::StaticClass()))
-        {
-            // Add the class to the RoomLibrary array
-            RoomLibrary.Add(AssetClass);
-        }
-    }
-
-    return RoomLibrary;
-}
 
 void ULevelGenerationFLibrary::InitializeGrid(TArray<bool>& Grid, int32 XSize, int32 YSize, int32 ZSize)
 {
@@ -131,13 +208,14 @@ bool ULevelGenerationFLibrary::IsCellOccupied(const TArray<bool>& Grid, int32 X,
 	return false;  // Out of bounds, treat as unoccupied
 }
 
-void ULevelGenerationFLibrary::MarkCellOccupied(TArray<bool>& Grid, int32 X, int32 Y, int32 Z, int32 XSize, int32 YSize)
+TArray<bool> ULevelGenerationFLibrary::MarkCellOccupied(TArray<bool> Grid, int32 X, int32 Y, int32 Z, int32 XSize, int32 YSize)
 {
 	int32 Index = X + (Y * XSize) + (Z * XSize * YSize);
 	if (Grid.IsValidIndex(Index))
 	{
 		Grid[Index] = true;
 	}
+	return Grid;
 }
 
 bool ULevelGenerationFLibrary::CanPlaceRoom(const TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize)
@@ -158,7 +236,7 @@ bool ULevelGenerationFLibrary::CanPlaceRoom(const TArray<bool>& Grid, FVector Ro
 	return true;  // No overlap
 }
 
-void ULevelGenerationFLibrary::MarkRoomOccupied(TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize)
+TArray<bool> ULevelGenerationFLibrary::MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize)
 {
 	for (int32 X = StartPosition.X; X < StartPosition.X + RoomFootprint.X; X++)
 	{
@@ -166,8 +244,9 @@ void ULevelGenerationFLibrary::MarkRoomOccupied(TArray<bool>& Grid, FVector Room
 		{
 			for (int32 Z = StartPosition.Z; Z < StartPosition.Z + RoomFootprint.Z; Z++)
 			{
-				MarkCellOccupied(Grid, X, Y, Z, XSize, YSize);
+				Grid=MarkCellOccupied(Grid, X, Y, Z, XSize, YSize);
 			}
 		}
 	}
+	return Grid;
 }
