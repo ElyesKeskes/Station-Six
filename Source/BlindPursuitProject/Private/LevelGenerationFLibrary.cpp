@@ -33,6 +33,42 @@ void ULevelGenerationFLibrary::DrawDebugGrid(UObject* WorldContextObject, TArray
 	}
 }
 
+void ULevelGenerationFLibrary::DrawDebugGridCustom(UObject* WorldContextObject, TArray<bool> Grid, FVector GridAnchorWorldLocation, FVector GridSize, float CellSize, FVector RoomAnchorCoordinates, FVector RoomFootprint, FColor CellColor, float Duration, float Thickness)
+{
+	// Loop through the Z, Y, and X dimensions of the room footprint
+	for (int32 Z = 0; Z < RoomFootprint.Z; Z++)
+	{
+		for (int32 Y = 0; Y < RoomFootprint.Y; Y++)
+		{
+			for (int32 X = 0; X < RoomFootprint.X; X++)
+			{
+				// Calculate the index of the current room cell in the grid
+				int32 RoomX = X + RoomAnchorCoordinates.X;
+				int32 RoomY = Y + RoomAnchorCoordinates.Y;
+				int32 RoomZ = Z + RoomAnchorCoordinates.Z;
+
+				// Ensure the room cell is within grid bounds
+				if (RoomX >= 0 && RoomX < GridSize.X && RoomY >= 0 && RoomY < GridSize.Y && RoomZ >= 0 && RoomZ < GridSize.Z)
+				{
+					// Calculate the 1D index of the room cell in the flattened grid array
+					int32 GridIndex = RoomX + (RoomY * GridSize.X) + (RoomZ * GridSize.X * GridSize.Y);
+
+					if (Grid.IsValidIndex(GridIndex)) // Check if the cell is valid
+					{
+						// Calculate the world position of the center of the current room cell
+						FVector CellCenterWorldLocation = GridAnchorWorldLocation + FVector(RoomX * CellSize + CellSize / 2.0f, RoomY * CellSize + CellSize / 2.0f, RoomZ * CellSize + CellSize / 2.0f);
+
+						// Draw the debug box at the room cell's center
+						DrawDebugBox(WorldContextObject->GetWorld(), CellCenterWorldLocation, FVector(CellSize / 2.0f), CellColor, false, Duration, 0, Thickness);
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
 
 
 FVector ULevelGenerationFLibrary::GetSocketCoordinatesInRoom(FVector RelativeLocation, FVector RoomFootprint, float GridCellLength, ESocketOrientation Orientation)
@@ -149,13 +185,13 @@ void ULevelGenerationFLibrary::RotateToAlignWithSocket(AActor* RoomActor, TArray
 }
 
 
-void ULevelGenerationFLibrary::InitializeGrid(TArray<bool>& Grid, int32 XSize, int32 YSize, int32 ZSize)
+void ULevelGenerationFLibrary::InitializeGrid(TArray<bool>& Grid, FVector GridSize)
 {
-	int32 GridSize = XSize * YSize * ZSize;
-	Grid.SetNum(GridSize);
+	int32 IntGridSize = GridSize.X * GridSize.Y * GridSize.Z;
+	Grid.SetNum(IntGridSize);
 
 	// Initialize all cells to 'false' (unoccupied)
-	for (int32 i = 0; i < GridSize; i++)
+	for (int32 i = 0; i < IntGridSize; i++)
 	{
 		Grid[i] = false;
 	}
@@ -181,7 +217,26 @@ TArray<bool> ULevelGenerationFLibrary::MarkCellOccupied(TArray<bool> Grid, int32
 	return Grid;
 }
 
-bool ULevelGenerationFLibrary::CanPlaceRoom(const TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize)
+bool ULevelGenerationFLibrary::CanPlaceRoom(UObject* WorldContextObject,const TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, FVector GridSize)
+{
+	for (int32 X = StartPosition.X; X < StartPosition.X + RoomFootprint.X; X++)
+	{
+		for (int32 Y = StartPosition.Y; Y < StartPosition.Y + RoomFootprint.Y; Y++)
+		{
+			for (int32 Z = StartPosition.Z; Z < StartPosition.Z + RoomFootprint.Z; Z++)
+			{
+				if (IsCellOccupied(Grid, X, Y, Z, GridSize.X, GridSize.Y))
+				{
+					float CellLength = 500.0f;
+					FVector CellCenter = FVector(X * CellLength + CellLength / 2.0f, Y * CellLength + CellLength / 2.0f, Z * CellLength + CellLength / 2.0f);
+					DrawDebugBox(WorldContextObject->GetWorld(), CellCenter, FVector(CellLength / 2.0f), FColor::Yellow, false, 120.0f, 0, 5.0f);
+					return false;
+				}
+			}
+		}
+	}
+	return true;
+}/*
 {
 	for (int32 X = StartPosition.X; X < StartPosition.X + RoomFootprint.X; X++)
 	{
@@ -190,26 +245,29 @@ bool ULevelGenerationFLibrary::CanPlaceRoom(const TArray<bool>& Grid, FVector Ro
 			for (int32 Z = StartPosition.Z; Z < StartPosition.Z + RoomFootprint.Z; Z++)
 			{
 				if (IsCellOccupied(Grid, X, Y, Z, XSize, YSize))
-				{
+				{	float CellLength = 500.0f;
+					FVector CellCenter = FVector(X * CellLength + CellLength / 2.0f, Y * CellLength + CellLength / 2.0f, Z * CellLength + CellLength / 2.0f);
+					DrawDebugBox(WorldContextObject->GetWorld(), CellCenter, FVector(CellLength / 2.0f), FColor::Yellow, false, 120.0f, 0, 5.0f);
 					return false;  // Room overlaps with an existing occupied cell
 				}
 			}
 		}
 	}
 	return true;  // No overlap
-}
+}*/
 
-TArray<bool> ULevelGenerationFLibrary::MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize)
+TArray<bool> ULevelGenerationFLibrary::MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, FVector GridSize)
 {
-	for (int32 X = StartPosition.X-1; X < StartPosition.X + RoomFootprint.X-1; X++)
+	for (int32 X = StartPosition.X; X < StartPosition.X + RoomFootprint.X; X++)
 	{
-		for (int32 Y = StartPosition.Y-1; Y < StartPosition.Y + RoomFootprint.Y-1; Y++)
+		for (int32 Y = StartPosition.Y; Y < StartPosition.Y + RoomFootprint.Y; Y++)
 		{
 			for (int32 Z = StartPosition.Z; Z < StartPosition.Z + RoomFootprint.Z; Z++)
 			{
-				Grid=MarkCellOccupied(Grid, X, Y, Z, XSize, YSize);
+				Grid = MarkCellOccupied(Grid, X, Y, Z, GridSize.X, GridSize.Y);
 			}
 		}
 	}
 	return Grid;
 }
+
