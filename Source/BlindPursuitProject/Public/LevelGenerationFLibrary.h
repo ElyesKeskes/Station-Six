@@ -3,11 +3,9 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Engine/ObjectLibrary.h"
+#include <cmath>
 #include "Kismet/BlueprintFunctionLibrary.h"
-#include "PackedLevelActor/PackedLevelActor.h"
 #include "LevelGenerationFLibrary.generated.h"
-
 
 UENUM(BlueprintType)
 enum class ESocketOrientation : uint8
@@ -38,7 +36,12 @@ struct FRoomSocketData
     AActor* ConnectedRoom;
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    FVector Location;
+    FVector RelativeLocation;
+
+    UPROPERTY(BlueprintReadWrite, EditAnywhere)
+    FVector CoordinatesInRoom;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere)
+    int Index;
 };
 
 UCLASS()
@@ -47,33 +50,46 @@ class BLINDPURSUITPROJECT_API ULevelGenerationFLibrary : public UBlueprintFuncti
     GENERATED_BODY()
 
 public:
-    // Function to load the room library from the content browser
-    UFUNCTION(BlueprintCallable, Category = "LevelGeneration")
-    static TArray<TSubclassOf<APackedLevelActor>> LoadRoomLibrary(const FString& Path);
-    // Rotate the room by 90 degrees clockwise and update socket orientations
+
+    static void DrawDebugCell(UObject* WorldContextObject, FVector CellCenter, FColor CellColor, float Duration, float Thickness);
+
     UFUNCTION(BlueprintCallable, Category="Level Generation")
-    static void RotateClockwiseBy90(AActor* RoomActor, TArray<FRoomSocketData>& SocketsData);
-    
-    // Rotate the room until the sockets are aligned
-    UFUNCTION(BlueprintCallable, Category="Level Generation")
-    static void RotateToAlignWithSocket(AActor* RoomActor, TArray<FRoomSocketData>& SocketsData, int32 OurSocketIndex, const FRoomSocketData& OtherRoomSocket);
+    static FVector GetSocketCoordinatesInRoom(FVector RelativeLocation, FVector RoomFootprint, float GridCellLength,ESocketOrientation Orientation);
+    UFUNCTION(BlueprintCallable, Category="Level Generation",meta = (WorldContext=WorldContextObject))
+    static void DrawDebugGrid(UObject* WorldContextObject, TArray<bool> Grid, int32 XSize, int32 YSize, int32 ZSize, float CellLength, FVector
+                              GridTopLeftCellCenterLocation);
+    UFUNCTION(BlueprintCallable, Category="Level Generation",meta = (WorldContext=WorldContextObject))
+    static void DrawDebugGridCustom(UObject* WorldContextObject, TArray<bool> Grid, FVector
+                                    GridAnchorWorldLocation, FVector GridSize, FVector RoomAnchorCoordinates, FVector RoomFootprint, FColor
+                                    CellColor, float Duration, float
+                                    Thickness);
+
     // Initialize a grid (1D array for a 2D or 3D grid)
     UFUNCTION(BlueprintCallable, Category = "Grid")
-    static void InitializeGrid(TArray<bool>& Grid, int32 XSize, int32 YSize, int32 ZSize = 1);
+    static void InitializeGrid(TArray<bool>& Grid, FVector GridSize);
+    UFUNCTION(BlueprintCallable, Category = "Grid")
+    static FVector GetSocketCoordinatesRelativeToSpaceAnchor(FVector SocketLocationRelativeToSpaceCenter, FVector SpaceSize);
 
     // Check if a grid cell is occupied (in the 1D array)
     UFUNCTION(BlueprintPure, Category = "Grid")
-    static bool IsCellOccupied(const TArray<bool>& Grid, int32 X, int32 Y, int32 Z, int32 XSize, int32 YSize);
+    static bool IsCellOccupied(const TArray<bool>& Grid, int32 X, int32 Y, int32 Z, FVector GridSize);
 
     // Mark a grid cell as occupied
     UFUNCTION(BlueprintCallable, Category = "Grid")
-    static void MarkCellOccupied(TArray<bool>& Grid, int32 X, int32 Y, int32 Z, int32 XSize, int32 YSize);
+    static TArray<bool> MarkCellOccupied(TArray<bool> Grid, int32 X, int32 Y, int32 Z, FVector GridSize);
 
     // Check if a room can be placed in the grid without overlap
+    UFUNCTION(BlueprintPure, Category = "Grid",meta = (WorldContext=WorldContextObject))
+    static bool CanPlaceRoom(UObject* WorldContextObject, const TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, FVector GridSize);
+    UFUNCTION(BlueprintCallable, Category = "Grid")
+    static TArray<bool> MarkRoomOccupied(TArray<bool> Grid, FVector RoomFootprint, FVector StartPosition, FVector GridSize);
     UFUNCTION(BlueprintPure, Category = "Grid")
-    static bool CanPlaceRoom(const TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize);
+    static FVector ConvertWorldLocationToGridCoordinates(FVector WorldLocation, FVector GridAnchorWorldLocation,
+                                                  FVector GridSize,
+                                                  float CellLength);
     UFUNCTION(BlueprintPure, Category = "Grid")
-    static void MarkRoomOccupied(TArray<bool>& Grid, FVector RoomFootprint, FVector StartPosition, int32 XSize, int32 YSize, int32 ZSize);
+    static FVector ConvertGridCoordinatesToWorldLocation(FVector GridCoordinates, FVector GridAnchorWorldLocation,
+                                                  float CellLength);
 };
 
 
