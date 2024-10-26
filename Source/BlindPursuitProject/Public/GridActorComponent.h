@@ -17,15 +17,21 @@ class BLINDPURSUITPROJECT_API UGridActorComponent : public UActorComponent
 public:	
 	// Sets default values for this component's properties
 	UGridActorComponent();
+	
 	//Define an array of 3 arrays representing a 3D grid
 	TArray<TArray<TArray<bool>>> Grid;
 	//Define grid dimensions
+	UPROPERTY(BlueprintReadOnly, Category = "Grid")
 	int32 GridXSize;
+	UPROPERTY(BlueprintReadOnly, Category = "Grid")
 	int32 GridYSize;
+	UPROPERTY(BlueprintReadOnly, Category = "Grid")
 	int32 GridZSize;
+	UPROPERTY(BlueprintReadOnly, Category = "Grid")
 	int32 GridCellSize; //Cubic cells
+	UPROPERTY(BlueprintReadOnly, Category = "Grid")
 	FVector GridAnchorWorldPosition; //World position of the grid anchor, which is the cell at the top-left corner of the grid, the center of the that cell
-
+	UPROPERTY(BlueprintReadOnly, Category = "Grid")
 	bool DrawDebug=true;
 
 protected:
@@ -36,7 +42,7 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	UFUNCTION(BlueprintCallable, Category = "Grid")
-	void InitializeGrid(int32 XSize, int32 YSize, int32 ZSize, int32 CellSize, FVector GridAnchorWorldPosition);
+	void InitializeGrid(int32 XSize, int32 YSize, int32 ZSize, int32 CellSize, FVector AnchorWorldPosition);
 	UFUNCTION(BlueprintCallable, Category = "Grid")
 	void MarkSpaceOccupied(FVector SpaceAnchorPosition, FVector SpaceSize);
 	UFUNCTION(BlueprintCallable, Category = "Debug")
@@ -56,7 +62,7 @@ public:
 	FVector GetSocketCoordinatesInRoom(FVector RelativeLocation, FVector RoomSize);
 	UFUNCTION(BlueprintPure, Category = "Grid")
 	FVector GetSpaceCenterWorldLocation(FVector SpaceAnchorCoordinates, FVector SpaceSize);
-	UFUNCTION(BlueprintCallable, Category = "Grid")
+	UFUNCTION(BlueprintPure, Category = "Grid")
 	FVector GetSpaceToConnectAnchorCoordinates(FVector ExistingSpaceAnchorCoordinates, FRoomSocketData SpaceToConnectSocketData,
 	                                  FRoomSocketData ExistingSpaceSocketData);
 };

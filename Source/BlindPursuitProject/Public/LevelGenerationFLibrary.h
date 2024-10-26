@@ -40,6 +40,8 @@ struct FRoomSocketData
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
     FVector CoordinatesInRoom;
+    UPROPERTY(BlueprintReadWrite, EditAnywhere)
+    int Index;
 };
 
 UCLASS()

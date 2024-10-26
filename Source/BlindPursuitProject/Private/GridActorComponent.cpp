@@ -91,7 +91,6 @@ void UGridActorComponent::MarkSpaceOccupied(FVector SpaceAnchorCoordinates, FVec
 
 							UE_LOG(LogTemp, Warning, TEXT("Space out of bounds: SpaceSizeX: %f, SpaceSizeY: %f, SpaceSizeZ: %f"), SpaceSize.X, SpaceSize.Y, SpaceSize.Z);
 							UE_LOG(LogTemp, Warning, TEXT("SpaceAnchorCoordinatesX: %f, SpaceAnchorCoordinatesY: %f, SpaceAnchorCoordinatesZ: %f"), SpaceAnchorCoordinates.X, SpaceAnchorCoordinates.Y, SpaceAnchorCoordinates.Z);
-							//UE LOG the grid space size
 							UE_LOG(LogTemp, Warning, TEXT("GridXSize: %d, GridYSize: %d, GridZSize: %d, GridXLength: %d, GridYLength: %d, GridZLength: %d"), GridXSize, GridYSize, GridZSize, Grid.Num(), Grid[0].Num(), Grid[0][0].Num());
 						}
 					}
@@ -180,7 +179,13 @@ FVector UGridActorComponent::ConvertFromWorldLocationToGridCoordinates(FVector W
 }
 
 bool UGridActorComponent::CheckSpaceOccupied(FVector SpaceAnchorCoordinates, FVector SpaceSize)
-{
+{	
+	//Handle out of grid bounds cases
+	if(SpaceAnchorCoordinates.X < 0 || SpaceAnchorCoordinates.Y < 0 || SpaceAnchorCoordinates.Z < 0 || SpaceAnchorCoordinates.X + SpaceSize.X > GridXSize || SpaceAnchorCoordinates.Y + SpaceSize.Y >=GridYSize || SpaceAnchorCoordinates.Z + SpaceSize.Z > GridZSize)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Space out of bounds: SpaceAnchorCoordinate X: %f, Y: %f, Z: %f, SpaceLimitCoordinates X: %f, Y: %f, Z: %f"),SpaceAnchorCoordinates.X, SpaceAnchorCoordinates.Y, SpaceAnchorCoordinates.Z, SpaceAnchorCoordinates.X + SpaceSize.X, SpaceAnchorCoordinates.Y + SpaceSize.Y, SpaceAnchorCoordinates.Z + SpaceSize.Z);
+		return false;
+	}
 	for(int32 X = SpaceAnchorCoordinates.X; X < SpaceAnchorCoordinates.X + SpaceSize.X; X++)
 	{
 		for(int32 Y = SpaceAnchorCoordinates.Y; Y < SpaceAnchorCoordinates.Y + SpaceSize.Y; Y++)
@@ -242,7 +247,7 @@ FVector UGridActorComponent::GetSpaceCenterWorldLocation(FVector SpaceAnchorCoor
 	// Correct for even sizes by subtracting half a cell size if the size is even
 	if (!IsEven((int32)SpaceSize.X))
 	{
-		SpaceCenterGridCoordinates.X -= 0.5f; // Align for even X size
+		//SpaceCenterGridCoordinates.X -= 0.5f; // Align for even X size
 	}
 	if (!IsEven((int32)SpaceSize.Y))
 	{

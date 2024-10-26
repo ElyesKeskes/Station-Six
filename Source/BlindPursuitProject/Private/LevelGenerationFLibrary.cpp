@@ -96,14 +96,20 @@ FVector ULevelGenerationFLibrary::GetSocketCoordinatesRelativeToSpaceAnchor(FVec
 	SocketCoordinatesRelativeToSpaceAnchor.X = std::floor(SocketLocationRelativeToSpaceAnchor.X / CELL_LENGTH);
 	SocketCoordinatesRelativeToSpaceAnchor.Y = std::floor(SocketLocationRelativeToSpaceAnchor.Y / CELL_LENGTH);
 
-	
-		UE_LOG(LogTemp, Warning, TEXT("SocketCoordinatesRelativeToSpaceAnchor.X: %f, SocketLocationRelativeToSpaceAnchor.X: %f, SocketLocationRelativeToSpaceCenter.X: %f, SpaceLengthX: %f"), SocketCoordinatesRelativeToSpaceAnchor.X, SocketLocationRelativeToSpaceAnchor.X, SocketLocationRelativeToSpaceCenter.X, SpaceLengthX);
-	
-		//Something isnt right
-		UE_LOG(LogTemp, Warning, TEXT("SocketCoordinatesRelativeToSpaceAnchor.Y: %f, SocketLocationRelativeToSpaceAnchor.Y: %f, SocketLocationRelativeToSpaceCenter.Y: %f, SpaceLengthY: %f"), SocketCoordinatesRelativeToSpaceAnchor.Y, SocketLocationRelativeToSpaceAnchor.Y, SocketLocationRelativeToSpaceCenter.Y, SpaceLengthY);
-	
-		
-
+	if(SocketCoordinatesRelativeToSpaceAnchor.X == SpaceSize.X)
+	{
+		SocketCoordinatesRelativeToSpaceAnchor.X = SpaceSize.X - 1;
+	}
+	if(SocketCoordinatesRelativeToSpaceAnchor.Y == SpaceSize.Y)
+	{
+		SocketCoordinatesRelativeToSpaceAnchor.Y = SpaceSize.Y - 1;
+	}
+	if(SocketCoordinatesRelativeToSpaceAnchor.Z == SpaceSize.Z)
+	{
+		SocketCoordinatesRelativeToSpaceAnchor.Z = SpaceSize.Z - 1;
+	}
+		//UE_LOG(LogTemp, Warning, TEXT("SocketCoordinatesRelativeToSpaceAnchor.X: %f, SocketLocationRelativeToSpaceAnchor.X: %f, SocketLocationRelativeToSpaceCenter.X: %f, SpaceLengthX: %f"), SocketCoordinatesRelativeToSpaceAnchor.X, SocketLocationRelativeToSpaceAnchor.X, SocketLocationRelativeToSpaceCenter.X, SpaceLengthX);
+		//UE_LOG(LogTemp, Warning, TEXT("SocketCoordinatesRelativeToSpaceAnchor.Y: %f, SocketLocationRelativeToSpaceAnchor.Y: %f, SocketLocationRelativeToSpaceCenter.Y: %f, SpaceLengthY: %f"), SocketCoordinatesRelativeToSpaceAnchor.Y, SocketLocationRelativeToSpaceAnchor.Y, SocketLocationRelativeToSpaceCenter.Y, SpaceLengthY);
 	return SocketCoordinatesRelativeToSpaceAnchor;
 }
 FVector ULevelGenerationFLibrary::GetSocketCoordinatesInRoom(FVector RelativeLocation, FVector RoomFootprint, float GridCellLength, ESocketOrientation Orientation)
@@ -132,7 +138,18 @@ FVector ULevelGenerationFLibrary::GetSocketCoordinatesInRoom(FVector RelativeLoc
 	UE_LOG(LogTemp, Warning, TEXT("scaledLocationY: %f"), scaledLocationY);
 	
 	CoordinatesInRoom.Z = 0;
-
+	if(CoordinatesInRoom.X == RoomFootprint.X)
+	{
+		CoordinatesInRoom.X = RoomFootprint.X - 1;
+	}
+	if(CoordinatesInRoom.Y == RoomFootprint.Y)
+	{
+		CoordinatesInRoom.Y = RoomFootprint.Y - 1;
+	}
+	if(CoordinatesInRoom.Z == RoomFootprint.Z)
+	{
+		CoordinatesInRoom.Z = RoomFootprint.Z - 1;
+	}
 	return CoordinatesInRoom;
 }
 
