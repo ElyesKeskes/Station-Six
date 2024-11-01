@@ -12,7 +12,7 @@ UGridActorComponent::UGridActorComponent()
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
 	//Initialize the grid with default values
-	InitializeGrid(20, 20, 1, 500, FVector(0.0f, 0.0f, 0.0f));
+	//InitializeGrid(40, 40, 2, 500, FVector(0.0f, 0.0f, 0.0f));
 	// ...
 }
 
@@ -33,7 +33,7 @@ void UGridActorComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 
 	if(DrawDebug)
 	{
-		DrawDebugGrid();
+		//DrawDebugGrid();
 	}
 }
 
