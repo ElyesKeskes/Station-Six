@@ -1,5 +1,3 @@
-// Fill out your copyright notice in the Description page of Project Settings.
-
 #pragma once
 
 #include "CoreMinimal.h"
@@ -15,33 +13,44 @@ enum class ESocketOrientation : uint8
     South,
     West
 };
-
-
-
 USTRUCT(BlueprintType)
 struct FRoomSocketData
 {
     GENERATED_BODY()
 
+    // Properties
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    ESocketOrientation Orientation;
+    ESocketOrientation Orientation = ESocketOrientation::North; // Default value
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    bool InUse;
+    bool InUse = false; // Default value
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    bool Connected;
+    bool Connected = false; // Default value
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    AActor* ConnectedRoom;
+    AActor* ConnectedRoom = nullptr; // Default value
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    FVector RelativeLocation;
+    FVector RelativeLocation = FVector::ZeroVector; // Default value
 
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    FVector CoordinatesInRoom;
+    FVector CoordinatesInRoom = FVector::ZeroVector; // Default value
+
     UPROPERTY(BlueprintReadWrite, EditAnywhere)
-    int Index;
+    int Index = 0; // Default value
+
+    // Constructor for additional initialization if needed
+    FRoomSocketData()
+        : Orientation(ESocketOrientation::North),
+          InUse(false),
+          Connected(false),
+          ConnectedRoom(nullptr),
+          RelativeLocation(FVector::ZeroVector),
+          CoordinatesInRoom(FVector::ZeroVector),
+          Index(0)
+    {
+    }
 };
 
 UCLASS()
