@@ -3,7 +3,6 @@
 ![Genre](https://img.shields.io/badge/Genre-Horror%2C%20Survival-red?style=for-the-badge)  
 ![Platform](https://img.shields.io/badge/Platform-PC-lightgrey?style=for-the-badge)  
 ![Status](https://img.shields.io/badge/Status-In%20Development-yellow?style=for-the-badge)  
-![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)  
 
 ---
 
