@@ -9,7 +9,7 @@
 
 ## 🎮 About the Game  
 
-**Descent: The Bunker** is a terrifying underground horror game where you, the protagonist, dive into a mysterious, procedurally generated (PCG) bunker to uncover the horrifying truth. With chilling puzzles, enigmatic NPCs, and an ever-changing map, no two playthroughs are the same. The deeper you go, the darker the secrets you uncover—and the closer you get to the horrifying truth lurking in the shadows.  
+**Station Six** is a terrifying underground horror game where you, the protagonist, dive into a mysterious, procedurally generated (PCG) bunker to uncover the horrifying truth. With chilling puzzles, enigmatic NPCs, and an ever-changing map, no two playthroughs are the same. The deeper you go, the darker the secrets you uncover—and the closer you get to the horrifying truth lurking in the shadows.  
 
 > "What happened down here?" Only you can find out—if you survive.  
 
