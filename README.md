@@ -38,8 +38,9 @@ With every door unlocked, the **truth gets darker** and the **dangers grow close
 
 ## 🎥 Gameplay Overview  
 
-📺 **Gameplay Trailer:** [Watch Now](https://esprittncom-my.sharepoint.com/:v:/g/personal/elyes_keskes_esprit_tn/ET3gRoinD1FDsec731dTovQB7KOE6FdZ0VUxYDAATKxn6w?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=2O2yln)  
+📺 **Gameplay Trailer:** [Watch Now](https://esprittncom-my.sharepoint.com/:v:/g/personal/fadhel_essid_esprit_tn/EUASduqTcCpOldfSkNTjoyMBHNgP_BkP_LxYZ3RxXbsZSA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=EgvRzg)  
 
+---
 ### 🕹️ Core Gameplay Mechanics:  
 1. **Explore**: Dive deeper into procedurally generated bunker rooms.  
 2. **Interact**: Engage with NPCs and decipher cryptic notes to piece together the story.  
@@ -48,25 +49,23 @@ With every door unlocked, the **truth gets darker** and the **dangers grow close
 5. **Escape or Discover**: Will you flee or unravel the sinister truth?  
 
 ---
-🧩 Development Details
+### 🧩 Development Details
 - Engine: Unreal Engine 5
 - Language: Blueprint + C++
 - Procedural System: Procedurally generated levels with unique puzzles and layouts.
 - AI: Intelligent NPC behaviors and dynamic horror elements.
 - Audio: Realistic, immersive 3D sound design.
 ---
-🏆 Achievements System
+### 🏆 Achievements System
 
 - 🔦 Light Keeper: Complete a section without running out of flashlight power.
 - 🔍 Truth Seeker: Discover all hidden notes and messages.
 - 🕳️ Survivor: Escape the bunker alive.
 - 🧩 Mastermind: Solve every puzzle without hints.
 
-## 🎥 Gameplay Overview  
 
-📺 **Gameplay Trailer:** [Watch Now]([https://esprittncom-my.sharepoint.com/:v:/g/personal/elyes_keskes_esprit_tn/ET3gRoinD1FDsec731dTovQB7KOE6FdZ0VUxYDAATKxn6w?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJPbmVEcml2ZUZvckJ1c2luZXNzIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXciLCJyZWZlcnJhbFZpZXciOiJNeUZpbGVzTGlua0NvcHkifX0&e=2O2yln](https://esprittncom-my.sharepoint.com/:v:/g/personal/fadhel_essid_esprit_tn/EUASduqTcCpOldfSkNTjoyMBHNgP_BkP_LxYZ3RxXbsZSA?nav=eyJyZWZlcnJhbEluZm8iOnsicmVmZXJyYWxBcHAiOiJTdHJlYW1XZWJBcHAiLCJyZWZlcnJhbFZpZXciOiJTaGFyZURpYWxvZy1MaW5rIiwicmVmZXJyYWxBcHBQbGF0Zm9ybSI6IldlYiIsInJlZmVycmFsTW9kZSI6InZpZXcifX0%3D&e=EgvRzg))  
 ---
-📩 Contact
+### 📩 Contact
 If you have any questions or would like to see the project footage, please don't hesitate to reach out via elyes.keskes@esprit.tn .
 
 ---
